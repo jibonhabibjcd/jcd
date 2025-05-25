@@ -141,8 +141,7 @@
     </div>
   </div>
 
-<script src='//libtl.com/sdk.js' data-zone='9379438' data-sdk='show_9379438'></script>
-<script>
+<script src='//libtl.com/sdk.js' data-zone='9379865' data-sdk='show_9379865'></script>
   const ADMIN_USER_ID = 5613992160;
   const BOT_TOKEN = "7809984946:AAExF5P82832exrW3kLkQ4KNNOu6XKzQ7qQ";
   let watchedAdsCount = 0;
@@ -160,8 +159,8 @@
   }
 
   function watchAd() {
-    if (typeof show_9379438 === 'function') {
-      show_9379438().then(() => {
+    if (typeof show_9379865 === 'function') {
+      show_9379865().then(() => {
         rewardUser();
       });
     }
@@ -206,8 +205,8 @@
   }
 
   function showRewardedInterstitial() {
-    if (typeof show_9379438 === 'function') {
-      show_9379438().then(() => {
+    if (typeof show_9379865 === 'function') {
+      show_9379865().then(() => {
         alert('You have seen an ad!');
         rewardUser();
       });
@@ -215,8 +214,8 @@
   }
 
   function showRewardedPopup() {
-    if (typeof show_9379438 === 'function') {
-      show_9379438('pop').then(() => {
+    if (typeof show9379865 === 'function') {
+      show_9379865('pop').then(() => {
         rewardUser();
       }).catch(e => {
         console.warn("Ad error:", e);
@@ -251,8 +250,8 @@
   }
 
   window.addEventListener('load', () => {
-    if (typeof show_9379438 === 'function') {
-      show_9379438({
+    if (typeof show_9379865 === 'function') {
+      show_9379865({
         type: 'inApp',
         inAppSettings: {
           frequency: 2,
