@@ -4,6 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Ads on Monetage mini app</title>
+
+  <!-- Font Awesome CDN for Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
   <style>
     body {
       margin: 0;
@@ -89,13 +93,36 @@
       border: none;
       border-radius: 10px;
       color: #fff;
-      background: linear-gradient(90deg, #00c6ff, #0072ff);
       cursor: pointer;
       transition: background 0.3s ease-in-out;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .btn-standard {
+      background: linear-gradient(90deg, #00c6ff, #0072ff); /* নীল */
+    }
+
+    .btn-popup {
+      background: linear-gradient(90deg, #00ff99, #00cc66); /* সবুজ */
+    }
+
+    .btn-interstitial {
+      background: linear-gradient(90deg, #cc66ff, #9900cc); /* বেগুনি */
+    }
+
+    .btn-auto {
+      background: linear-gradient(90deg, #ff9900, #ff6600); /* কমলা */
+    }
+
+    .btn-stop {
+      background: linear-gradient(90deg, #ff4d4d, #cc0000); /* লাল */
     }
 
     .buttons button:hover {
-      background: linear-gradient(90deg, #ff8c00, #ff0080);
+      filter: brightness(1.2);
     }
 
     .user-info {
@@ -126,15 +153,29 @@
       <span id="ads-progress">0%</span>
     </div>
     <div class="buttons">
-      <button onclick="watchAd()">Watch Ad (Standard)</button>
-      <button onclick="startAutoAds()">Auto Show Ads</button>
-      <button onclick="stopAutoAds()" id="stop-auto-btn" disabled>Stop Auto Ads</button>
-      <button onclick="showRewardedInterstitial()">Rewarded Interstitial</button>
-      <button onclick="showRewardedPopup()">Rewarded Popup</button>
+      <button class="btn-standard" onclick="watchAd()">
+        <i class="fas fa-play-circle"></i> Watch Ad (Standard)
+      </button>
+
+      <button class="btn-popup" onclick="showRewardedPopup()">
+        <i class="fas fa-gift"></i> Rewarded Popup
+      </button>
+
+      <button class="btn-interstitial" onclick="showRewardedInterstitial()">
+        <i class="fas fa-ad"></i> Rewarded Interstitial
+      </button>
+
+      <button class="btn-auto" onclick="startAutoAds()">
+        <i class="fas fa-bolt"></i> Auto Show Ads
+      </button>
+
+      <button class="btn-stop" onclick="stopAutoAds()" id="stop-auto-btn" disabled>
+        <i class="fas fa-stop-circle"></i> Stop Auto Ads
+      </button>
     </div>
   </div>
 
-  <!-- Updated SDK Script -->
+  <!-- SDK Script -->
   <script src='//libtl.com/sdk.js' data-zone='9379438' data-sdk='show_9379438'></script>
   <script>
     const ADMIN_USER_ID = 5613992160;
@@ -199,7 +240,6 @@
       });
     }
 
-    // Rewarded Interstitial Button Function
     function showRewardedInterstitial() {
       if (typeof show_9379438 === 'function') {
         show_9379438().then(() => {
@@ -209,7 +249,6 @@
       }
     }
 
-    // Rewarded Popup Button Function
     function showRewardedPopup() {
       if (typeof show_9379438 === 'function') {
         show_9379438('pop').then(() => {
@@ -220,7 +259,6 @@
       }
     }
 
-    // In-App Interstitial (auto run)
     window.addEventListener('load', () => {
       if (typeof show_9379438 === 'function') {
         show_9379438({
