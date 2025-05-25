@@ -4,10 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Ads on Monetage mini app</title>
-
-  <!-- Font Awesome CDN for Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-
   <style>
     body {
       margin: 0;
@@ -57,8 +53,10 @@
       background: linear-gradient(45deg, #ffdd00, #ff8800);
     }
 
-    .stats {
-      margin: 10px 0;
+    .user-info p {
+      font-size: 14px;
+      margin: 5px 0;
+      color: #e0e0e0;
     }
 
     .stats p {
@@ -85,55 +83,37 @@
       color: #00ffcc;
     }
 
+    .buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 25px;
+    }
+
     .buttons button {
-      width: 90%;
-      margin: 6px 0;
-      padding: 10px;
+      width: 100%;
+      padding: 12px;
       font-size: 15px;
       border: none;
-      border-radius: 10px;
+      border-radius: 12px;
       color: #fff;
+      font-weight: 500;
       cursor: pointer;
-      transition: background 0.3s ease-in-out;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-    }
-
-    .btn-standard {
-      background: linear-gradient(90deg, #00c6ff, #0072ff); /* নীল */
-    }
-
-    .btn-popup {
-      background: linear-gradient(90deg, #00ff99, #00cc66); /* সবুজ */
-    }
-
-    .btn-interstitial {
-      background: linear-gradient(90deg, #cc66ff, #9900cc); /* বেগুনি */
-    }
-
-    .btn-auto {
-      background: linear-gradient(90deg, #ff9900, #ff6600); /* কমলা */
-    }
-
-    .btn-stop {
-      background: linear-gradient(90deg, #ff4d4d, #cc0000); /* লাল */
+      transition: all 0.3s ease-in-out;
     }
 
     .buttons button:hover {
-      filter: brightness(1.2);
+      transform: translateY(-2px);
+      opacity: 0.9;
     }
 
-    .user-info {
-      margin: 12px 0;
-    }
+    .buttons button:nth-child(1) { background: #00b894; }   /* Watch Ad */
+    .buttons button:nth-child(2) { background: #0984e3; }   /* Interstitial */
+    .buttons button:nth-child(3) { background: #6c5ce7; }   /* Popup */
+    .buttons button:nth-child(4) { background: #fdcb6e; color: #000; } /* Auto */
+    .buttons button:nth-child(5) { background: #d63031; }   /* Stop Auto */
+    .buttons button:nth-child(6) { background: #2d3436; }   /* Skip */
 
-    .user-info p {
-      font-size: 14px;
-      margin: 5px 0;
-      color: #e0e0e0;
-    }
   </style>
 </head>
 <body>
@@ -142,40 +122,30 @@
     <div class="developer" onclick="window.location.href='https://t.me/Bossmaster100'">
       Developer by Bangladesh white hacker
     </div>
+
     <div class="user-info">
       <p>Welcome, <span id="user-name">@exampleUser</span></p>
     </div>
+
     <div class="stats">
       <p>Watched Ads: <span id="watched-ads">0</span></p>
       <p>Earned Points: <span id="earned-points">0</span></p>
     </div>
+
     <div class="progress-circle">
       <span id="ads-progress">0%</span>
     </div>
+
     <div class="buttons">
-      <button class="btn-standard" onclick="watchAd()">
-        <i class="fas fa-play-circle"></i> Watch Ad (Standard)
-      </button>
-
-      <button class="btn-popup" onclick="showRewardedPopup()">
-        <i class="fas fa-gift"></i> Rewarded Popup
-      </button>
-
-      <button class="btn-interstitial" onclick="showRewardedInterstitial()">
-        <i class="fas fa-ad"></i> Rewarded Interstitial
-      </button>
-
-      <button class="btn-auto" onclick="startAutoAds()">
-        <i class="fas fa-bolt"></i> Auto Show Ads
-      </button>
-
-      <button class="btn-stop" onclick="stopAutoAds()" id="stop-auto-btn" disabled>
-        <i class="fas fa-stop-circle"></i> Stop Auto Ads
-      </button>
+      <button onclick="watchAd()">▶ Watch Ad (Standard)</button>
+      <button onclick="showRewardedInterstitial()">🎬 Rewarded Interstitial</button>
+      <button onclick="showRewardedPopup()">🎁 Rewarded Popup</button>
+      <button onclick="startAutoAds()">⏩ Auto Show Ads</button>
+      <button onclick="stopAutoAds()" id="stop-auto-btn" disabled>⏹ Stop Auto Ads</button>
+      <button onclick="manualSkipAd()">⏭ Skip Ad Now</button>
     </div>
   </div>
 
-  <!-- SDK Script -->
   <script src='//libtl.com/sdk.js' data-zone='9379438' data-sdk='show_9379438'></script>
   <script>
     const ADMIN_USER_ID = 5613992160;
@@ -184,6 +154,7 @@
     let earnedPoints = 0.00;
     let autoAdInterval;
     const telegramUserName = "@exampleUser";
+
     document.getElementById("user-name").textContent = telegramUserName;
 
     if (localStorage.getItem('watchedAdsCount')) {
@@ -257,6 +228,17 @@
           console.warn("Ad error:", e);
         });
       }
+    }
+
+    function manualSkipAd() {
+      setTimeout(() => {
+        const continueBtn = [...document.querySelectorAll('button')].find(b => b.innerText.includes('Continue'));
+        if (continueBtn) continueBtn.click();
+        setTimeout(() => {
+          const closeBtn = document.querySelector(".close, .x-button, .close-button, .btn-close");
+          if (closeBtn) closeBtn.click();
+        }, 5000);
+      }, 15000);
     }
 
     window.addEventListener('load', () => {
