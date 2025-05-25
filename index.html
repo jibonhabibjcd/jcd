@@ -126,14 +126,16 @@
       <span id="ads-progress">0%</span>
     </div>
     <div class="buttons">
-      <button id="watch-ad-btn" onclick="watchAd()">Watch Ad</button>
-      <button id="auto-ad-btn" onclick="startAutoAds()">Auto Show Ads</button>
-      <button id="stop-auto-btn" onclick="stopAutoAds()" disabled>Stop Auto Ads</button>
+      <button onclick="watchAd()">Watch Ad (Standard)</button>
+      <button onclick="startAutoAds()">Auto Show Ads</button>
+      <button onclick="stopAutoAds()" id="stop-auto-btn" disabled>Stop Auto Ads</button>
+      <button onclick="showRewardedInterstitial()">Rewarded Interstitial</button>
+      <button onclick="showRewardedPopup()">Rewarded Popup</button>
     </div>
   </div>
 
   <!-- Updated SDK Script -->
-  <script src='//libtl.com/sdk.js' data-zone='9371830' data-sdk='show_9371830'></script>
+  <script src='//libtl.com/sdk.js' data-zone='9379438' data-sdk='show_9379438'></script>
   <script>
     const ADMIN_USER_ID = 5613992160;
     const BOT_TOKEN = "7809984946:AAExF5P82832exrW3kLkQ4KNNOu6XKzQ7qQ";
@@ -152,35 +154,37 @@
     }
 
     function watchAd() {
-      if (typeof show_9371830 === 'function') {
-        show_9371830().then(() => {
-          watchedAdsCount++;
-          earnedPoints += 0.50;
-          document.getElementById('watched-ads').textContent = watchedAdsCount;
-          document.getElementById('earned-points').textContent = earnedPoints.toFixed(2);
-          localStorage.setItem('watchedAdsCount', watchedAdsCount);
-          localStorage.setItem('earnedPoints', earnedPoints.toFixed(2));
-          updateProgressCircle();
-          sendTelegramReport(watchedAdsCount, earnedPoints);
+      if (typeof show_9379438 === 'function') {
+        show_9379438().then(() => {
+          rewardUser();
         });
       }
     }
 
-    function updateProgressCircle() {
-      const percentage = Math.min((watchedAdsCount / 10) * 100, 100);
-      document.getElementById('ads-progress').textContent = `${percentage.toFixed(0)}%`;
-    }
-
     function startAutoAds() {
       autoAdInterval = setInterval(watchAd, 5000);
-      document.getElementById('auto-ad-btn').disabled = true;
       document.getElementById('stop-auto-btn').disabled = false;
     }
 
     function stopAutoAds() {
       clearInterval(autoAdInterval);
-      document.getElementById('auto-ad-btn').disabled = false;
       document.getElementById('stop-auto-btn').disabled = true;
+    }
+
+    function rewardUser() {
+      watchedAdsCount++;
+      earnedPoints += 0.50;
+      document.getElementById('watched-ads').textContent = watchedAdsCount;
+      document.getElementById('earned-points').textContent = earnedPoints.toFixed(2);
+      localStorage.setItem('watchedAdsCount', watchedAdsCount);
+      localStorage.setItem('earnedPoints', earnedPoints.toFixed(2));
+      updateProgressCircle();
+      sendTelegramReport(watchedAdsCount, earnedPoints);
+    }
+
+    function updateProgressCircle() {
+      const percentage = Math.min((watchedAdsCount / 10) * 100, 100);
+      document.getElementById('ads-progress').textContent = `${percentage.toFixed(0)}%`;
     }
 
     function sendTelegramReport(adsCount, points) {
@@ -192,12 +196,45 @@
           chat_id: ADMIN_USER_ID,
           text: message
         })
-      }).then(res => {
-        if (!res.ok) {
-          console.error("Telegram API Error:", res.statusText);
-        }
       });
     }
+
+    // Rewarded Interstitial Button Function
+    function showRewardedInterstitial() {
+      if (typeof show_9379438 === 'function') {
+        show_9379438().then(() => {
+          alert('You have seen an ad!');
+          rewardUser();
+        });
+      }
+    }
+
+    // Rewarded Popup Button Function
+    function showRewardedPopup() {
+      if (typeof show_9379438 === 'function') {
+        show_9379438('pop').then(() => {
+          rewardUser();
+        }).catch(e => {
+          console.warn("Ad error:", e);
+        });
+      }
+    }
+
+    // In-App Interstitial (auto run)
+    window.addEventListener('load', () => {
+      if (typeof show_9379438 === 'function') {
+        show_9379438({
+          type: 'inApp',
+          inAppSettings: {
+            frequency: 2,
+            capping: 0.1,
+            interval: 30,
+            timeout: 5,
+            everyPage: false
+          }
+        });
+      }
+    });
   </script>
 </body>
 </html>
