@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ads on Monetage mini app</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      color: #ffffff;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      text-align: center;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 25px;
+      border-radius: 20px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.37);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      width: 320px;
+    }
+
+    .container h1 {
+      font-size: 22px;
+      color: #00ffcc;
+      margin-bottom: 12px;
+    }
+
+    .developer {
+      font-size: 13px;
+      background: linear-gradient(45deg, #00ff99, #00ccff);
+      padding: 6px 12px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      display: inline-block;
+      cursor: pointer;
+      color: #000;
+      font-weight: bold;
+      transition: all 0.3s ease-in-out;
+    }
+
+    .developer:hover {
+      transform: scale(1.05);
+      background: linear-gradient(45deg, #ffdd00, #ff8800);
+    }
+
+    .stats {
+      margin: 10px 0;
+    }
+
+    .stats p {
+      margin: 5px 0;
+      font-size: 14px;
+      color: #e0f7fa;
+    }
+
+    .progress-circle {
+      width: 90px;
+      height: 90px;
+      border: 6px solid #00ffcc;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 15px auto;
+      background: rgba(0, 255, 204, 0.1);
+    }
+
+    .progress-circle span {
+      font-size: 18px;
+      font-weight: bold;
+      color: #00ffcc;
+    }
+
+    .buttons button {
+      width: 90%;
+      margin: 6px 0;
+      padding: 10px;
+      font-size: 15px;
+      border: none;
+      border-radius: 10px;
+      color: #fff;
+      background: linear-gradient(90deg, #00c6ff, #0072ff);
+      cursor: pointer;
+      transition: background 0.3s ease-in-out;
+    }
+
+    .buttons button:hover {
+      background: linear-gradient(90deg, #ff8c00, #ff0080);
+    }
+
+    .user-info {
+      margin: 12px 0;
+    }
+
+    .user-info p {
+      font-size: 14px;
+      margin: 5px 0;
+      color: #e0e0e0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Earning Technology</h1>
+    <div class="developer" onclick="window.location.href='https://t.me/Bossmaster100'">
+      Developer by Bangladesh white hacker
+    </div>
+    <div class="user-info">
+      <p>Welcome, <span id="user-name">@exampleUser</span></p>
+    </div>
+    <div class="stats">
+      <p>Watched Ads: <span id="watched-ads">0</span></p>
+      <p>Earned Points: <span id="earned-points">0</span></p>
+    </div>
+    <div class="progress-circle">
+      <span id="ads-progress">0%</span>
+    </div>
+    <div class="buttons">
+      <button id="watch-ad-btn" onclick="watchAd()">Watch Ad</button>
+      <button id="auto-ad-btn" onclick="startAutoAds()">Auto Show Ads</button>
+      <button id="stop-auto-btn" onclick="stopAutoAds()" disabled>Stop Auto Ads</button>
+    </div>
+  </div>
+
+  <!-- Updated SDK Script -->
+  <script src='//libtl.com/sdk.js' data-zone='9379438' data-sdk='show_9379438'></script>
+  <script>
+    const ADMIN_USER_ID = 5613992160;
+    const BOT_TOKEN = "7809984946:AAExF5P82832exrW3kLkQ4KNNOu6XKzQ7qQ";
+    let watchedAdsCount = 0;
+    let earnedPoints = 0.00;
+    let autoAdInterval;
+    const telegramUserName = "@exampleUser";
+    document.getElementById("user-name").textContent = telegramUserName;
+
+    if (localStorage.getItem('watchedAdsCount')) {
+      watchedAdsCount = parseInt(localStorage.getItem('watchedAdsCount'));
+      earnedPoints = parseFloat(localStorage.getItem('earnedPoints'));
+      document.getElementById('watched-ads').textContent = watchedAdsCount;
+      document.getElementById('earned-points').textContent = earnedPoints.toFixed(2);
+      updateProgressCircle();
+    }
+
+    function watchAd() {
+      if (typeof show_9379438 === 'function') {
+        show_9379438().then(() => {
+          watchedAdsCount++;
+          earnedPoints += 0.50;
+          document.getElementById('watched-ads').textContent = watchedAdsCount;
+          document.getElementById('earned-points').textContent = earnedPoints.toFixed(2);
+          localStorage.setItem('watchedAdsCount', watchedAdsCount);
+          localStorage.setItem('earnedPoints', earnedPoints.toFixed(2));
+          updateProgressCircle();
+          sendTelegramReport(watchedAdsCount, earnedPoints);
+        });
+      }
+    }
+
+    function updateProgressCircle() {
+      const percentage = Math.min((watchedAdsCount / 10) * 100, 100);
+      document.getElementById('ads-progress').textContent = `${percentage.toFixed(0)}%`;
+    }
+
+    function startAutoAds() {
+      autoAdInterval = setInterval(watchAd, 5000);
+      document.getElementById('auto-ad-btn').disabled = true;
+      document.getElementById('stop-auto-btn').disabled = false;
+    }
+
+    function stopAutoAds() {
+      clearInterval(autoAdInterval);
+      document.getElementById('auto-ad-btn').disabled = false;
+      document.getElementById('stop-auto-btn').disabled = true;
+    }
+
+    function sendTelegramReport(adsCount, points) {
+      const message = `✅ ইউজার: ${telegramUserName}\n📺 বিজ্ঞাপন দেখা হয়েছে: ${adsCount} বার\n💰 মোট পয়েন্ট: ${points.toFixed(2)} পয়েন্ট`;
+      fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          chat_id: ADMIN_USER_ID,
+          text: message
+        })
+      }).then(res => {
+        if (!res.ok) {
+          console.error("Telegram API Error:", res.statusText);
+        }
+      });
+    }
+  </script>
+</body>
+</html>
